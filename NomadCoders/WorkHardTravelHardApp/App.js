@@ -11,9 +11,10 @@ import {
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { theme } from './colors';
-import { Fontisto } from '@expo/vector-icons';
+import { Fontisto, Foundation } from '@expo/vector-icons';
 
 const STORAGE_KEY = '@toDos';
+const TAB_KEY = '@tab';
 
 export default function App() {
   const [working, setWorking] = useState(true);
@@ -22,17 +23,31 @@ export default function App() {
 
   useEffect(() => {
     loadTodos();
+    loadTab();
   }, []);
 
-  const travel = () => setWorking(false);
-  const work = () => setWorking(true);
+  const travel = async () => {
+    setWorking(false);
+    await AsyncStorage.setItem(TAB_KEY, working);
+  };
+  const work = async () => {
+    setWorking(true);
+    await AsyncStorage.setItem(TAB_KEY, working);
+  };
+  const loadTab = async () => {
+    const w = await AsyncStorage.getItem(TAB_KEY);
+    setWorking(w);
+  };
   const onChangeText = (payload) => setText(payload);
   const addTodo = async () => {
     if (text === '') {
       return;
     }
     // save Todo
-    const newTodos = { ...todos, [Date.now()]: { text, working } };
+    const newTodos = {
+      ...todos,
+      [Date.now()]: { text, working, finished: false },
+    };
     setTodos(newTodos);
     await saveTodos(newTodos);
     setText('');
@@ -57,6 +72,12 @@ export default function App() {
         },
       },
     ]);
+  };
+  const finishTodo = (key) => {
+    const newTodos = { ...todos };
+    newTodos[key].finished = true;
+    setTodos(newTodos);
+    saveTodos(newTodos);
   };
 
   return (
@@ -95,10 +116,34 @@ export default function App() {
         {Object.keys(todos).map((key) =>
           todos[key].working === working ? (
             <View style={styles.todo} key={key}>
-              <Text style={styles.todoText}>{todos[key].text}</Text>
-              <TouchableOpacity onPress={() => deleteTodo(key)}>
-                <Fontisto name="trash" size={18} color={theme.grey} />
-              </TouchableOpacity>
+              <Text
+                style={{
+                  ...styles.todoText,
+                  textDecorationLine: todos[key].finished
+                    ? 'line-through'
+                    : 'none',
+                  color: todos[key].finished ? theme.grey : 'white',
+                }}
+              >
+                {todos[key].text}
+              </Text>
+              <View style={styles.todoActions}>
+                <TouchableOpacity style={styles.actionsBtn}>
+                  <Foundation name="pencil" size={18} color={theme.grey} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.actionsBtn}
+                  onPress={() => finishTodo(key)}
+                >
+                  <Fontisto name="check" size={18} color={theme.grey} />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.actionsBtn}
+                  onPress={() => deleteTodo(key)}
+                >
+                  <Fontisto name="trash" size={18} color={theme.grey} />
+                </TouchableOpacity>
+              </View>
             </View>
           ) : null
         )}
@@ -145,5 +190,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '500',
+  },
+  todoActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionsBtn: {
+    marginLeft: 15,
   },
 });
