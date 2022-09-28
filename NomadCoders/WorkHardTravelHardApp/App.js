@@ -77,7 +77,7 @@ export default function App() {
   };
   const finishTodo = (key) => {
     const newTodos = { ...todos };
-    newTodos[key].finished = true;
+    newTodos[key].finished = !newTodos[key].finished;
     setTodos(newTodos);
     saveTodos(newTodos);
   };
