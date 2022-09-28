@@ -57,7 +57,9 @@ export default function App() {
   };
   const loadTodos = async () => {
     const s = await AsyncStorage.getItem(STORAGE_KEY);
-    setTodos(JSON.parse(s));
+    if (s) {
+      setTodos(JSON.parse(s));
+    }
   };
   const deleteTodo = (key) => {
     Alert.alert('Delete to do', 'Are you sure?', [
