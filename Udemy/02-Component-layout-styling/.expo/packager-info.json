@@ -1,4 +1,7 @@
 {
   "expoServerPort": 19000,
-  "packagerPort": 19000
+  "packagerPort": 19000,
+  "expoServerNgrokUrl": "https://ti-m5d.cozups.02-component-layout-styling.exp.direct",
+  "packagerNgrokUrl": "https://ti-m5d.cozups.02-component-layout-styling.exp.direct",
+  "ngrokPid": 2904
 }
