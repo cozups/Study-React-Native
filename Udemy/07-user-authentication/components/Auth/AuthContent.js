@@ -6,6 +6,7 @@ import AuthForm from './AuthForm';
 import { Colors } from '../../constants/styles';
 
 function AuthContent({ isLogin, onAuthenticate }) {
+
   const [credentialsInvalid, setCredentialsInvalid] = useState({
     email: false,
     password: false,
