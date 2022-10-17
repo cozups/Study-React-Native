@@ -4,7 +4,7 @@ import { View, StyleSheet, Text, ScrollView, Dimensions } from 'react-native';
 import * as Location from 'expo-location';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const API_KEY = '08f5b848da32a2a8212983b4458dcf2a';
+const API_KEY = '';
 
 export default function App() {
   const [city, setCity] = useState(null);
