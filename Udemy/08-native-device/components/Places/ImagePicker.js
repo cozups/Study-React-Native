@@ -11,12 +11,11 @@ import OutlinedButton from '../UI/OutlinedButton';
 const ImagePicker = () => {
   const [pickedImage, setPickedImage] = useState();
 
-  const [cameraPermissonInformation, requesetPermisson] =
-    useCameraPermissions();
+  const [cameraPermissonInformation, requestPermisson] = useCameraPermissions();
 
   const verifyPermissions = async () => {
     if (cameraPermissonInformation.status === PermissionStatus.UNDETERMINED) {
-      const permissionResponse = await requesetPermisson();
+      const permissionResponse = await requestPermisson();
 
       return permissionResponse.granted;
     }
