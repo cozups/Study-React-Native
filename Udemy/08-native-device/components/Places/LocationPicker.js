@@ -12,7 +12,7 @@ import {
 } from '@react-navigation/native';
 
 import OutlinedButton from '../UI/OutlinedButton';
-import { getMapPreview } from '../../util/location';
+import { getAddress, getMapPreview } from '../../util/location';
 import { Colors } from '../../constants/colors';
 
 const LocationPicker = ({ onPickLocation }) => {
@@ -36,7 +36,17 @@ const LocationPicker = ({ onPickLocation }) => {
   }, [route, isFocused]);
 
   useEffect(() => {
-    onPickLocation(pickedLocation);
+    const handleLocation = async () => {
+      if (pickedLocation) {
+        const address = await getAddress(
+          pickedLocation.lat,
+          pickedLocation.lng
+        );
+        onPickLocation({ ...pickedLocation, address: address });
+      }
+    };
+
+    handleLocation();
   }, [pickedLocation, onPickLocation]);
 
   const verifyPermissions = async () => {
